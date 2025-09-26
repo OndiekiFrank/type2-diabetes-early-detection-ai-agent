@@ -20,3 +20,17 @@ This project leverages real-world health survey data to **predict diabetes risk*
 4. **Recommend** preventive measures based on findings.
 
 ---
+## Data Understanding
+- **Source:** Public health survey dataset (cleaned for analysis).
+- **Target Variable:** Presence of Type 2 Diabetes (binary classification).
+- **Features:** Demographics (age, gender), lifestyle (physical activity, smoking), and clinical metrics (BMI, cholesterol check, blood pressure).
+
+**Key Data Insights:**
+- Imbalanced target distribution: Fewer positive diabetes cases.
+- Strong correlations between **BMI**, **Age**, **Cholesterol Check**, and diabetes status.
+- Lifestyle habits like **physical inactivity** and **smoking** show moderate association.
+
+![Class Distribution](images/Distribution%20of%20Diabetes%20class.png)
+
+
+---
