@@ -11,4 +11,12 @@ Early prediction enables:
 
 This project leverages real-world health survey data to **predict diabetes risk** and identify key factors that drive the disease.
 
+---
 
+## Project Objectives
+1. **Analyze** lifestyle and health-related features to uncover risk patterns.
+2. **Build** machine learning models to classify individuals as diabetic or non-diabetic.
+3. **Evaluate** models for accuracy, interpretability, and real-world applicability.
+4. **Recommend** preventive measures based on findings.
+
+---
