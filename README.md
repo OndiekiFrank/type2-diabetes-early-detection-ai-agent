@@ -87,3 +87,14 @@ The confusion matrix summarizes the model’s classification performance,
 highlighting true positives, false positives, true negatives, and false negatives.
 
 ![Confusion Matrix – Final Test](images/Confusion%20Matrix%20-%20Final%20Test.png)
+
+---
+
+## Recommendations
+1. **Public Health Campaigns**  
+   - Encourage regular **cholesterol checks** and annual diabetes screening for high-risk age groups.
+   - Promote **physical activity programs** to help maintain healthy BMI.
+2. **Lifestyle Interventions**  
+   - Educate communities on **smoking cessation** and its link to diabetes.
+3. **Clinical Integration**  
+   - Deploy the XGBoost model as a decision-support tool in primary care for early detection.
