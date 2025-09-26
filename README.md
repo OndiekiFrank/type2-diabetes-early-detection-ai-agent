@@ -20,6 +20,35 @@ This project leverages real-world health survey data to **predict diabetes risk*
 4. **Recommend** preventive measures based on findings.
 
 ---
+## Repository Structure
+type2-diabetes-ai-agent/
+│
+├─ 📁 data/
+│   ├─ raw/                     # (Optional) Original/raw datasets
+│   └─ processed/                # Cleaned or feature-engineered datasets
+│
+├─ 📁 notebooks/
+│   └─ type2_diabetes_ai_agent.ipynb   # Main Jupyter Notebook
+│
+├─ 📁 images/
+│   ├─ profile_photo.jpg               # Main repo image (first impression)
+│   ├─ class_distribution.png
+│   ├─ correlation_heatmap_numerical.png
+│   ├─ pair_plot_key_features_diabetes_outcome.png
+│   ├─ box_plots.png
+│   ├─ confusion_matrix_final_test.png
+│
+├─ 📁 src/
+│   ├─ __init__.py
+│   ├─ data_preprocessing.py          
+│   ├─ model_training.py               
+│   └─ utils.py                        
+│
+├─ .gitignore
+├─ README.md                           
+└─ LICENSE                              
+
+---
 ## Data Understanding
 - **Source:** Public health survey dataset (cleaned for analysis).
 - **Target Variable:** Presence of Type 2 Diabetes (binary classification).
