@@ -2,4 +2,13 @@
 
 ![Profile Photo](images/Profile%20Photo.jpg)
 
-Building an AI-driven system for early detection of Type 2 Diabetes using NHANES datasets (2013–2018). Includes data processing, EDA, feature engineering, machine learning, and model interpretability for actionable health insights.
+## Background
+Type 2 Diabetes is a growing global health concern that can lead to severe complications if undiagnosed or untreated.  
+Early prediction enables:
+- **Timely medical interventions**
+- **Lifestyle adjustments**
+- **Cost reduction for healthcare systems**
+
+This project leverages real-world health survey data to **predict diabetes risk** and identify key factors that drive the disease.
+
+
