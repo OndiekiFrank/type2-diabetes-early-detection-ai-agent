@@ -34,3 +34,56 @@ This project leverages real-world health survey data to **predict diabetes risk*
 
 
 ---
+
+## Methodology
+
+| Stage | Approach |
+|------|----------|
+| **Data Cleaning** | Handling missing values, encoding categorical variables, standardizing numerical features. |
+| **EDA** | Correlation heatmaps, boxplots, and hypothesis testing (ANOVA, chi-square). |
+| **Balancing** | **SMOTE** applied to address class imbalance. |
+| **Modeling** | Logistic Regression, Random Forest, XGBoost, KNN, Deep Neural Network (Keras/TensorFlow). |
+| **Evaluation** | Accuracy, F1-score, ROC-AUC, confusion matrices. |
+| **Tuning** | Hyperparameter optimization (GridSearchCV, Keras Tuner). |
+
+### Correlation Heatmap of Numerical Features
+Shows relationships among continuous variables and highlights strong predictors.
+
+![Correlation Heatmap of Numerical Features](images/Correlation%20Heatmap%20of%20Numerical%20Features.png)
+
+
+### Pair Plot of Key Features by Diabetes Outcome
+Visualizes pairwise relationships among the top predictive features, colored by diabetes outcome.
+
+![Pair Plot of Key Features by Diabetes Outcome](images/Pair%20Plot%20of%20Key%20Features%20by%20Diabetes%20Outcome.png)
+
+---
+
+## Machine Learning Models
+
+| Model                   | Key Strengths | Performance Summary |
+|--------------------------|---------------|----------------------|
+| Logistic Regression      | Interpretability | Accuracy 0.83, F1 0.81 |
+| Random Forest            | Handles non-linear relationships | Accuracy 0.87, F1 0.84 |
+| **XGBoost** (Best)       | High predictive power | **Accuracy 0.89, F1 0.87** |
+| KNN                      | Simple, non-parametric | Accuracy 0.79, F1 0.77 |
+| Deep Neural Network      | Captures complex patterns | Accuracy 0.85, F1 0.82 |
+
+### Box Plots of Key Numerical Features
+Box plots reveal the distribution, spread, and potential outliers for key numerical variables.
+
+![Box Plots](images/box%20plots.png)
+
+---
+
+## Key Findings
+- **BMI, Age, and Cholesterol Check** are the strongest predictors of Type 2 Diabetes.
+- **Physical activity** and **smoking habits** are important lifestyle factors.
+- Addressing class imbalance (SMOTE) improved model performance across all algorithms.
+- **XGBoost** emerged as the most accurate and stable model.
+
+### Confusion Matrix – Final Test
+The confusion matrix summarizes the model’s classification performance,  
+highlighting true positives, false positives, true negatives, and false negatives.
+
+![Confusion Matrix – Final Test](images/Confusion%20Matrix%20-%20Final%20Test.png)
