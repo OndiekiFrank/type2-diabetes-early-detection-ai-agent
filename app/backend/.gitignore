@@ -1,16 +1,19 @@
-# Virtual Environment
-app/venv/
+# Virtual environments
 venv/
+../venv/
+app/venv/
 .env/
 .venv/
 env/
 
-# Python cache and build files
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# Build and distribution
 build/
 develop-eggs/
 dist/
@@ -23,14 +26,11 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
-# IDE files
+# IDE
 .vscode/
 .idea/
 *.swp
@@ -39,7 +39,6 @@ MANIFEST
 # Environment variables
 .env
 .env.local
-.env.production
 
 # Logs
 *.log
@@ -47,12 +46,10 @@ logs/
 
 # Database
 *.db
-*.sqlite3
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Testing
-.coverage
-.pytest_cache/
+*.sqlite3# Python cache files
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/*.class
