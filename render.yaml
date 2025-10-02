@@ -1,0 +1,47 @@
+services:
+  # Backend API Service (FastAPI)
+  - type: web
+    name: insulyn-ai-backend
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r app/backend/requirements.txt
+    startCommand: cd app/backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: GROQ_API_KEY
+        fromSecret: groq_api_key
+      - key: LLM_MODEL_NAME
+        value: openai/gpt-oss-20b
+      - key: LLM_TEMPERATURE
+        value: 0.6
+      - key: MODEL_PATH
+        value: ./data/best_model.pkl
+      - key: LOG_LEVEL
+        value: INFO
+
+  # Frontend Static Site (React)
+  - type: web
+    name: insulyn-ai-frontend
+    env: static
+    plan: free
+    region: oregon
+    buildCommand: |
+      cd app/frontend/insulyn-frontend
+      npm install
+      npm run build
+    staticPublishPath: ./app/frontend/insulyn-frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://insulyn-ai-backend.onrender.com
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
