@@ -5,8 +5,12 @@ services:
     env: python
     plan: free
     region: oregon
-    buildCommand: pip install -r app/backend/requirements.txt
-    startCommand: cd app/backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    buildCommand: |
+      cd app/backend
+      pip install -r requirements.txt
+    startCommand: |
+      cd app/backend
+      uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: ENVIRONMENT
         value: production
@@ -22,16 +26,14 @@ services:
         value: INFO
 
   # Frontend Static Site (React)
-  - type: web
+  - type: static
     name: insulyn-ai-frontend
-    env: static
     plan: free
-    region: oregon
     buildCommand: |
       cd app/frontend/insulyn-frontend
       npm install
       npm run build
-    staticPublishPath: ./app/frontend/insulyn-frontend/dist
+    staticPublishPath: app/frontend/insulyn-frontend/dist
     envVars:
       - key: VITE_API_URL
         value: https://insulyn-ai-backend.onrender.com
