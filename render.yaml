@@ -7,11 +7,14 @@ services:
     region: oregon
     buildCommand: |
       cd app/backend
+      pip install --upgrade pip
       pip install -r requirements.txt
     startCommand: |
       cd app/backend
-      uvicorn app.main:app --host 0.0.0.0 --port $PORT
+      python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
       - key: ENVIRONMENT
         value: production
       - key: GROQ_API_KEY
@@ -25,7 +28,7 @@ services:
       - key: LOG_LEVEL
         value: INFO
 
-  # Frontend Static Site (React) - Remove plan for static sites
+  # Frontend Static Site (React)
   - type: web
     name: insulyn-ai-frontend
     env: static
@@ -37,13 +40,3 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://insulyn-ai-backend.onrender.com
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin
