@@ -15,7 +15,7 @@ services:
       - key: ENVIRONMENT
         value: production
       - key: GROQ_API_KEY
-        value: groq_api_key  # Reference to secret, not fromSecret
+        value: groq_api_key
       - key: LLM_MODEL_NAME
         value: openai/gpt-oss-20b
       - key: LLM_TEMPERATURE
@@ -25,11 +25,10 @@ services:
       - key: LOG_LEVEL
         value: INFO
 
-  # Frontend Static Site (React)
+  # Frontend Static Site (React) - Remove plan for static sites
   - type: web
     name: insulyn-ai-frontend
     env: static
-    plan: free
     buildCommand: |
       cd app/frontend/insulyn-frontend
       npm install
