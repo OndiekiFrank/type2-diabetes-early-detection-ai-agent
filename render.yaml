@@ -15,7 +15,7 @@ services:
       - key: ENVIRONMENT
         value: production
       - key: GROQ_API_KEY
-        fromSecret: groq_api_key
+        value: groq_api_key  # Reference to secret, not fromSecret
       - key: LLM_MODEL_NAME
         value: openai/gpt-oss-20b
       - key: LLM_TEMPERATURE
