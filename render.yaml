@@ -26,8 +26,9 @@ services:
         value: INFO
 
   # Frontend Static Site (React)
-  - type: static
+  - type: web
     name: insulyn-ai-frontend
+    env: static
     plan: free
     buildCommand: |
       cd app/frontend/insulyn-frontend
