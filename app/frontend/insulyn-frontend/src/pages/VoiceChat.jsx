@@ -36,6 +36,9 @@ const VoiceChatAssistant = ({ language = 'english' }) => {
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
 
+  // Use environment variable or fallback to production URL
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://insulyn-ai-backend.onrender.com';
+
   const translations = {
     english: {
       title: '🎤 Voice Chat Assistant',
@@ -141,8 +144,8 @@ const VoiceChatAssistant = ({ language = 'english' }) => {
       
       const testText = mockQuestions[language] || mockQuestions.english;
       
-      // Use test endpoint with mock text
-      const response = await fetch('/api/v1/voice-chat/test', {
+      // UPDATED: Use production backend URL
+      const response = await fetch(`${API_BASE_URL}/api/v1/voice-chat/test`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -180,7 +183,8 @@ const VoiceChatAssistant = ({ language = 'english' }) => {
     setShowTextDialog(false);
     
     try {
-      const response = await fetch('/api/v1/voice-chat/test', {
+      // UPDATED: Use production backend URL
+      const response = await fetch(`${API_BASE_URL}/api/v1/voice-chat/test`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

@@ -41,6 +41,9 @@ const EmergencyCheck = ({ language = 'english' }) => {
     newMedication: ''
   });
 
+  // Use environment variable or fallback to production URL
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://insulyn-ai-backend.onrender.com';
+
   const symptomList = [
     { id: 'extreme_thirst', label: 'Extreme thirst' },
     { id: 'frequent_urination', label: 'Frequent urination' },
@@ -134,7 +137,8 @@ const EmergencyCheck = ({ language = 'english' }) => {
 
       console.log('Sending request:', requestBody);
 
-      const response = await fetch('/api/v1/emergency-assessment', {
+      // UPDATED: Use production backend URL
+      const response = await fetch(`${API_BASE_URL}/api/v1/emergency-assessment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
