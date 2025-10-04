@@ -15,36 +15,37 @@ const EmergencyCheck = lazy(() => import('./pages/EmergencyCheck'));
 
 // Loading component
 const LoadingFallback = () => (
-  <div style={{ 
-    display: 'flex', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    height: '100vh',
-    flexDirection: 'column',
-    gap: '16px',
-    backgroundColor: '#fafafa'
-  }}>
-    <div style={{ 
-      width: '60px', 
-      height: '60px', 
-      border: '4px solid #e3f2fd',
-      borderTop: '4px solid #1976d2',
-      borderRadius: '50%',
-      animation: 'spin 1s linear infinite'
-    }}></div>
-    <p style={{ 
-      color: '#666', 
-      fontSize: '18px',
-      fontWeight: '500'
-    }}>Loading Insulyn AI...</p>
-    <style>
-      {`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}
-    </style>
+  <div className="loading-container">
+    <div className="loading-spinner"></div>
+    <p className="loading-text">Loading Insulyn AI...</p>
+    <style>{`
+      .loading-container {
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        height: 100vh;
+        flex-direction: column;
+        gap: 16px;
+        background-color: #fafafa;
+      }
+      .loading-spinner {
+        width: 60px; 
+        height: 60px; 
+        border: 4px solid #e3f2fd;
+        border-top: 4px solid #1976d2;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      .loading-text {
+        color: #666; 
+        font-size: 18px;
+        font-weight: 500;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
   </div>
 );
 
@@ -66,53 +67,70 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ 
-          padding: '40px 20px', 
-          textAlign: 'center',
-          maxWidth: '500px',
-          margin: '50px auto',
-          border: '1px solid #ffcdd2',
-          borderRadius: '8px',
-          backgroundColor: '#ffebee'
-        }}>
-          <h2 style={{ color: '#d32f2f', marginBottom: '20px' }}>
-            Oops! Something went wrong
-          </h2>
-          <p style={{ marginBottom: '20px', color: '#666' }}>
-            We're sorry for the inconvenience. Please try refreshing the page.
-          </p>
+        <div className="error-container">
+          <h2>Oops! Something went wrong</h2>
+          <p>We're sorry for the inconvenience. Please try refreshing the page.</p>
           <button 
             onClick={() => window.location.reload()}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#d32f2f',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
+            className="reload-button"
           >
             Reload Application
           </button>
           
           {process.env.NODE_ENV === 'development' && this.state.error && (
-            <details style={{ marginTop: '30px', textAlign: 'left' }}>
-              <summary style={{ cursor: 'pointer', marginBottom: '10px' }}>
-                Error Details (Development)
-              </summary>
-              <pre style={{ 
-                background: '#f5f5f5', 
-                padding: '15px', 
-                borderRadius: '4px',
-                overflow: 'auto',
-                fontSize: '12px',
-                textAlign: 'left'
-              }}>
-                {this.state.error.toString()}
-              </pre>
+            <details className="error-details">
+              <summary>Error Details (Development)</summary>
+              <pre>{this.state.error.toString()}</pre>
             </details>
           )}
+          <style>{`
+            .error-container {
+              padding: 40px 20px; 
+              text-align: center;
+              max-width: 500px;
+              margin: 50px auto;
+              border: 1px solid #ffcdd2;
+              border-radius: 8px;
+              background-color: #ffebee;
+            }
+            .error-container h2 { 
+              color: #d32f2f; 
+              margin-bottom: 20px; 
+            }
+            .error-container p { 
+              margin-bottom: 20px; 
+              color: #666; 
+            }
+            .reload-button {
+              padding: 10px 20px;
+              background-color: #d32f2f;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+              font-size: 16px;
+              transition: background-color 0.3s;
+            }
+            .reload-button:hover {
+              background-color: #b71c1c;
+            }
+            .error-details { 
+              margin-top: 30px; 
+              text-align: left; 
+            }
+            .error-details summary { 
+              cursor: pointer; 
+              margin-bottom: 10px; 
+            }
+            .error-details pre { 
+              background: #f5f5f5; 
+              padding: 15px; 
+              border-radius: 4px;
+              overflow: auto;
+              font-size: 12px;
+              text-align: left;
+            }
+          `}</style>
         </div>
       );
     }
@@ -123,42 +141,50 @@ class ErrorBoundary extends React.Component {
 
 // 404 Component
 const NotFoundPage = () => (
-  <div style={{ 
-    textAlign: 'center', 
-    padding: '50px 20px',
-    maxWidth: '600px',
-    margin: '0 auto',
-    minHeight: '60vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }}>
-    <h1 style={{ color: '#1976d2', marginBottom: '20px' }}>404 - Page Not Found</h1>
-    <p style={{ fontSize: '18px', marginBottom: '30px', color: '#666' }}>
-      The page you're looking for doesn't exist or has been moved.
-    </p>
-    <a 
-      href="/" 
-      style={{
-        display: 'inline-block',
-        padding: '12px 30px',
-        backgroundColor: '#1976d2',
-        color: 'white',
-        textDecoration: 'none',
-        borderRadius: '6px',
-        fontSize: '16px',
-        fontWeight: '500',
-        transition: 'background-color 0.3s'
-      }}
-      onMouseOver={(e) => e.target.style.backgroundColor = '#1565c0'}
-      onMouseOut={(e) => e.target.style.backgroundColor = '#1976d2'}
-    >
-      Return to Home
-    </a>
+  <div className="not-found-container">
+    <h1>404 - Page Not Found</h1>
+    <p>The page you're looking for doesn't exist or has been moved.</p>
+    <a href="/" className="home-link">Return to Home</a>
+    <style>{`
+      .not-found-container {
+        text-align: center; 
+        padding: 50px 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .not-found-container h1 { 
+        color: #1976d2; 
+        margin-bottom: 20px; 
+      }
+      .not-found-container p { 
+        font-size: 18px; 
+        margin-bottom: 30px; 
+        color: #666; 
+      }
+      .home-link {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: #1976d2;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s;
+      }
+      .home-link:hover {
+        background-color: #1565c0;
+      }
+    `}</style>
   </div>
 );
 
+// Theme configuration
 const theme = createTheme({
   palette: {
     primary: {
@@ -175,15 +201,9 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h4: {
-      fontWeight: 600,
-    },
-    h5: {
-      fontWeight: 500,
-    },
-    h6: {
-      fontWeight: 500,
-    },
+    h4: { fontWeight: 600 },
+    h5: { fontWeight: 500 },
+    h6: { fontWeight: 500 },
   },
   components: {
     MuiButton: {
@@ -208,22 +228,17 @@ const theme = createTheme({
 function App() {
   const [language, setLanguage] = useState('english');
 
-  // Memoize the context value to prevent unnecessary re-renders
-  const appContextValue = React.useMemo(() => ({
-    language,
-    setLanguage,
-  }), [language]);
-
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
           <div className="App">
-            <Suspense fallback={<div style={{ height: '64px', background: '#2E7D32' }}></div>}>
+            <Suspense fallback={<div className="header-placeholder"></div>}>
               <Header language={language} setLanguage={setLanguage} />
             </Suspense>
-            <main style={{ minHeight: '80vh', paddingTop: '20px' }}>
+            
+            <main className="main-content">
               <Suspense fallback={<LoadingFallback />}>
                 <Routes>
                   <Route path="/" element={<Home language={language} />} />
@@ -232,14 +247,29 @@ function App() {
                   <Route path="/voice-chat" element={<VoiceChat language={language} />} />
                   <Route path="/diet-plan" element={<DietPlan language={language} />} />
                   <Route path="/emergency" element={<EmergencyCheck language={language} />} />
-                  {/* 404 Catch-all route */}
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Suspense>
             </main>
-            <Suspense fallback={<div style={{ height: '60px', background: '#f5f5f5' }}></div>}>
+            
+            <Suspense fallback={<div className="footer-placeholder"></div>}>
               <Footer language={language} />
             </Suspense>
+            
+            <style>{`
+              .header-placeholder {
+                height: 64px; 
+                background: #2E7D32;
+              }
+              .footer-placeholder {
+                height: 60px; 
+                background: #f5f5f5;
+              }
+              .main-content {
+                min-height: 80vh; 
+                padding-top: 20px;
+              }
+            `}</style>
           </div>
         </Router>
       </ThemeProvider>

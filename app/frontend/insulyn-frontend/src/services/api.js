@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://insulyn-ai-backend.onrender.com';
 
 async function apiRequest(endpoint, options = {}) {
   try {
@@ -27,29 +27,42 @@ async function apiRequest(endpoint, options = {}) {
   }
 }
 
+// CORRECTED ENDPOINTS - Match your backend
 export async function predictDiabetesRisk(formData) {
-  return apiRequest('/api/v1/predict', {
+  return apiRequest('/api/v1/diabetes-assessment', {
     method: 'POST',
     body: JSON.stringify(formData),
   });
 }
 
-export async function chatWithAI(message, language = 'english') {
+export async function chatWithAI(message, language = 'english', conversation_id = null) {
   return apiRequest('/api/v1/chat', {
     method: 'POST',
-    body: JSON.stringify({ message, language }),
+    body: JSON.stringify({ 
+      message, 
+      language,
+      conversation_id,
+      require_llm: true 
+    }),
   });
 }
 
-export async function voiceChat(audioData, language = 'english') {
-  return apiRequest('/api/v1/chat/voice', {
+export async function voiceChat(text, language = 'english') {
+  return apiRequest('/api/v1/voice-chat/test', {
     method: 'POST',
-    body: JSON.stringify({ audio_data: audioData, language }),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      text: text,
+      language: language,
+      user_id: 'voice-user'
+    }),
   });
 }
 
 export async function generateDietPlan(userData, language = 'english') {
-  return apiRequest('/api/v1/diet-plan', {
+  return apiRequest('/api/v1/diet-plan/generate', {
     method: 'POST',
     body: JSON.stringify({ ...userData, language }),
   });
@@ -63,7 +76,7 @@ export async function assessSymptoms(symptoms, language = 'english') {
 }
 
 export async function getChatTopics() {
-  return apiRequest('/api/v1/chat/topics');
+  return apiRequest('/api/v1/health-topics');
 }
 
 export async function clearChatHistory() {

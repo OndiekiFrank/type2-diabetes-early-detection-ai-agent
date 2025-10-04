@@ -32,7 +32,8 @@ const ChatBot = ({ language = 'english' }) => {
   const [retryCount, setRetryCount] = useState(0);
   const messagesEndRef = useRef(null);
 
-  const API_BASE_URL = 'http://localhost:8000';
+  // Use environment variable or fallback to production URL
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://insulyn-ai-backend.onrender.com';
 
   // Initialize conversation
   useEffect(() => {
@@ -48,7 +49,6 @@ const ChatBot = ({ language = 'english' }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        timeout: 5000
       });
       
       if (response.ok) {
@@ -62,7 +62,7 @@ const ChatBot = ({ language = 'english' }) => {
     } catch (error) {
       console.error('❌ Backend connection failed:', error);
       setBackendStatus('disconnected');
-      setError(`Backend connection failed: ${error.message}. Please ensure the server is running on port 8000.`);
+      setError(`Backend connection failed: ${error.message}. Please ensure the server is running.`);
     }
   };
 
@@ -197,7 +197,7 @@ const ChatBot = ({ language = 'english' }) => {
 
       // Show error message to user
       setMessages(prev => [...prev, { 
-        text: `🚨 **LLM Service Unavailable**\n\nI'm unable to connect to the AI service right now.\n\n**Error:** ${errorMessage}\n**Retry Attempt:** ${newRetryCount}\n\nPlease:\n1. Check if the backend server is running\n2. Ensure port 8000 is accessible\n3. Try again in a moment\n4. Contact support if this persists`,
+        text: `🚨 **LLM Service Unavailable**\n\nI'm unable to connect to the AI service right now.\n\n**Error:** ${errorMessage}\n**Retry Attempt:** ${newRetryCount}\n\nPlease:\n1. Check if the backend server is running\n2. Try again in a moment\n3. Contact support if this persists`,
         sender: 'bot',
         timestamp: new Date(),
         id: Date.now() + 1,

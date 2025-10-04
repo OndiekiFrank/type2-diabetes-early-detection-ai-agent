@@ -39,6 +39,9 @@ const DietPlan = ({ language = 'english' }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // Use environment variable or fallback to production URL
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://insulyn-ai-backend.onrender.com';
+
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -57,7 +60,7 @@ const DietPlan = ({ language = 'english' }) => {
       delete requestData.bmi;
       delete requestData.bmi_category;
       
-      const response = await fetch('http://localhost:8000/api/v1/diet-plan/generate', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/diet-plan/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

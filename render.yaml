@@ -5,13 +5,20 @@ services:
     env: python
     plan: free
     region: oregon
-    buildCommand: pip install -r app/backend/requirements.txt
-    startCommand: cd app/backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    buildCommand: |
+      cd app/backend
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: |
+      cd app/backend
+      python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
       - key: ENVIRONMENT
         value: production
       - key: GROQ_API_KEY
-        fromSecret: groq_api_key
+        value: groq_api_key
       - key: LLM_MODEL_NAME
         value: openai/gpt-oss-20b
       - key: LLM_TEMPERATURE
@@ -25,23 +32,11 @@ services:
   - type: web
     name: insulyn-ai-frontend
     env: static
-    plan: free
-    region: oregon
     buildCommand: |
       cd app/frontend/insulyn-frontend
       npm install
       npm run build
-    staticPublishPath: ./app/frontend/insulyn-frontend/dist
+    staticPublishPath: app/frontend/insulyn-frontend/dist
     envVars:
       - key: VITE_API_URL
         value: https://insulyn-ai-backend.onrender.com
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin

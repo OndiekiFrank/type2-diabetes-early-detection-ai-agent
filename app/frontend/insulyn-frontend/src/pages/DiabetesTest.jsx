@@ -69,6 +69,9 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Use environment variable or fallback to production URL
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://insulyn-ai-backend.onrender.com';
+
   const translations = {
     english: {
       title: 'Premium Diabetes Risk Assessment',
@@ -217,7 +220,8 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
         throw new Error('Please fill in all required fields');
       }
 
-      const response = await fetch('/api/v1/diabetes-assessment', {
+      // UPDATED: Use production backend URL
+      const response = await fetch(`${API_BASE_URL}/api/v1/diabetes-assessment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
