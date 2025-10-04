@@ -220,7 +220,6 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
         throw new Error('Please fill in all required fields');
       }
 
-      // UPDATED: Use production backend URL
       const response = await fetch(`${API_BASE_URL}/api/v1/diabetes-assessment`, {
         method: 'POST',
         headers: {
@@ -263,33 +262,71 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
     setError('');
   };
 
+  // Updated risk assessment functions
   const getRiskColor = (riskLevel) => {
-    switch (riskLevel?.toLowerCase()) {
-      case 'high risk': return 'error';
-      case 'moderate risk': return 'warning';
-      case 'low risk': return 'success';
-      case 'very low risk': return 'info';
-      default: return 'info';
-    }
+    if (!riskLevel) return 'info';
+    
+    const level = riskLevel.toLowerCase();
+    if (level.includes('high')) return 'error';
+    if (level.includes('moderate')) return 'warning';
+    if (level.includes('low')) return 'success';
+    return 'info';
   };
 
   const getRiskIcon = (riskLevel) => {
-    switch (riskLevel?.toLowerCase()) {
-      case 'high risk': return <Warning />;
-      default: return <CheckCircle />;
-    }
+    if (!riskLevel) return <CheckCircle />;
+    
+    const level = riskLevel.toLowerCase();
+    if (level.includes('high')) return <Warning />;
+    return <CheckCircle />;
+  };
+
+  const getProbabilityPercentage = () => {
+    if (!result) return 0;
+    
+    // Handle both direct probability and nested risk_analysis probability
+    const probability = result.probability || result.risk_analysis?.probability || 0;
+    return (probability * 100).toFixed(1);
+  };
+
+  const getRiskLevel = () => {
+    if (!result) return '';
+    
+    // Handle both direct risk_level and nested risk_analysis risk_level
+    return result.risk_level || result.risk_analysis?.risk_level || 'Unknown Risk';
+  };
+
+  const getKeyRiskFactors = () => {
+    if (!result) return [];
+    
+    // Handle both direct key_factors and nested risk_analysis key_factors
+    return result.key_factors || result.risk_analysis?.key_factors || [];
+  };
+
+  const getHealthMetrics = () => {
+    if (!result) return {};
+    
+    return result.health_metrics || {};
+  };
+
+  const getRecommendations = () => {
+    if (!result) return {};
+    
+    return result.recommendations || {};
   };
 
   const getSeverityColor = (severity) => {
-    switch (severity?.toLowerCase()) {
-      case 'high': return 'error';
-      case 'moderate': return 'warning';
-      case 'low': return 'success';
-      default: return 'info';
-    }
+    if (!severity) return 'info';
+    
+    const level = severity.toLowerCase();
+    if (level.includes('high')) return 'error';
+    if (level.includes('moderate')) return 'warning';
+    if (level.includes('low')) return 'success';
+    return 'info';
   };
 
   const getHealthScoreColor = (score) => {
+    if (!score) return 'info';
     if (score >= 80) return 'success';
     if (score >= 60) return 'warning';
     return 'error';
@@ -474,26 +511,27 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
               </Card>
             </Grid>
 
-            {/* Risk Analysis */}
+            {/* Risk Analysis - UPDATED */}
             <Grid item xs={12} md={6}>
               <Card elevation={2}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom color="primary">
                     🎯 Diabetes Risk Assessment
                   </Typography>
+                  
                   <Alert 
-                    severity={getRiskColor(result.risk_level)} 
-                    icon={getRiskIcon(result.risk_level)}
+                    severity={getRiskColor(getRiskLevel())} 
+                    icon={getRiskIcon(getRiskLevel())}
                     sx={{ mb: 2 }}
                   >
-                    <Typography variant="h6">
-                      {result.risk_level}
+                    <Typography variant="h6" gutterBottom>
+                      {getRiskLevel()}
                     </Typography>
-                    <Typography variant="body2">
-                      Probability: {((result.probability || result.risk_analysis?.diabetes_risk?.probability || 0) * 100).toFixed(1)}%
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                      Probability: {getProbabilityPercentage()}%
                     </Typography>
-                    <Typography variant="body2">
-                      Confidence: {result.risk_analysis?.diabetes_risk?.confidence || 'moderate'}
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      This means you have a {getProbabilityPercentage()}% chance of developing type 2 diabetes in the next 10 years.
                     </Typography>
                   </Alert>
                   
@@ -501,13 +539,13 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                     Prevention Strategy:
                   </Typography>
                   <Typography variant="body2" paragraph>
-                    {result.recommendations?.medical_followup || "Proactive lifestyle management"}
+                    {getRecommendations().medical_followup || "Proactive lifestyle management based on your risk factors"}
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
 
-            {/* Key Risk Factors */}
+            {/* Key Risk Factors - UPDATED */}
             <Grid item xs={12} md={6}>
               <Card elevation={2}>
                 <CardContent>
@@ -515,27 +553,36 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                     ⚠️ {t.riskFactors}
                   </Typography>
                   <List dense>
-                    {result.key_factors?.map((factor, index) => (
-                      <ListItem key={index}>
-                        <ListItemIcon>
-                          <Chip 
-                            label={factor.severity} 
-                            size="small" 
-                            color={getSeverityColor(factor.severity)}
+                    {getKeyRiskFactors().length > 0 ? (
+                      getKeyRiskFactors().map((factor, index) => (
+                        <ListItem key={index}>
+                          <ListItemIcon>
+                            <Chip 
+                              label={factor.severity || 'Unknown'} 
+                              size="small" 
+                              color={getSeverityColor(factor.severity)}
+                            />
+                          </ListItemIcon>
+                          <ListItemText 
+                            primary={factor.factor}
+                            secondary={factor.description || `Severity: ${factor.severity}`}
                           />
-                        </ListItemIcon>
+                        </ListItem>
+                      ))
+                    ) : (
+                      <ListItem>
                         <ListItemText 
-                          primary={factor.factor}
-                          secondary={factor.severity === 'moderate' ? 'Consider lifestyle changes' : 'Monitor regularly'}
+                          primary="No significant risk factors identified"
+                          secondary="Continue with healthy lifestyle maintenance"
                         />
                       </ListItem>
-                    ))}
+                    )}
                   </List>
                 </CardContent>
               </Card>
             </Grid>
 
-            {/* Health Metrics */}
+            {/* Health Metrics - UPDATED */}
             <Grid item xs={12}>
               <Card elevation={2}>
                 <CardContent>
@@ -552,10 +599,10 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                           <TableBody>
                             <TableRow>
                               <TableCell><strong>BMI</strong></TableCell>
-                              <TableCell>{result.health_metrics?.bmi}</TableCell>
+                              <TableCell>{getHealthMetrics().bmi || 'N/A'}</TableCell>
                               <TableCell>
                                 <Chip 
-                                  label={result.health_metrics?.bmi_category} 
+                                  label={getHealthMetrics().bmi_category || 'Unknown'} 
                                   size="small" 
                                   color="primary"
                                 />
@@ -563,27 +610,27 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                             </TableRow>
                             <TableRow>
                               <TableCell><strong>Metabolic Age</strong></TableCell>
-                              <TableCell>{result.health_metrics?.metabolic_age}</TableCell>
+                              <TableCell>{getHealthMetrics().metabolic_age || 'N/A'}</TableCell>
                               <TableCell>years</TableCell>
                             </TableRow>
                             <TableRow>
                               <TableCell><strong>Health Score</strong></TableCell>
                               <TableCell>
                                 <Box display="flex" alignItems="center" gap={1}>
-                                  {result.health_metrics?.health_score}/100
+                                  {getHealthMetrics().health_score || 0}/100
                                   <LinearProgress 
                                     variant="determinate" 
-                                    value={result.health_metrics?.health_score} 
+                                    value={getHealthMetrics().health_score || 0} 
                                     sx={{ flexGrow: 1 }}
-                                    color={getHealthScoreColor(result.health_metrics?.health_score)}
+                                    color={getHealthScoreColor(getHealthMetrics().health_score)}
                                   />
                                 </Box>
                               </TableCell>
                               <TableCell>
                                 <Chip 
-                                  label={`${result.health_metrics?.health_score}%`} 
+                                  label={`${getHealthMetrics().health_score || 0}%`} 
                                   size="small" 
-                                  color={getHealthScoreColor(result.health_metrics?.health_score)}
+                                  color={getHealthScoreColor(getHealthMetrics().health_score)}
                                 />
                               </TableCell>
                             </TableRow>
@@ -599,11 +646,11 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                       <List dense>
                         <ListItem>
                           <ListItemIcon>
-                            <Favorite color="success" />
+                            <Favorite color={getRiskLevel().toLowerCase().includes('low') ? 'success' : 'warning'} />
                           </ListItemIcon>
                           <ListItemText 
-                            primary={`Metabolic Health: ${result.risk_level === 'Low Risk' ? 'Good' : 'Needs Attention'}`}
-                            secondary={`Risk Level: ${result.risk_level}`}
+                            primary={`Metabolic Health: ${getRiskLevel().toLowerCase().includes('low') ? 'Good' : 'Needs Attention'}`}
+                            secondary={`Risk Level: ${getRiskLevel()}`}
                           />
                         </ListItem>
                         <ListItem>
@@ -611,7 +658,7 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                             <MonitorHeart color="info" />
                           </ListItemIcon>
                           <ListItemText 
-                            primary={`Cardiovascular Status: ${result.health_metrics?.bmi_category === 'Normal' ? 'Healthy' : 'Monitor'}`}
+                            primary={`Cardiovascular Status: ${(getHealthMetrics().bmi_category || '').toLowerCase().includes('normal') ? 'Healthy' : 'Monitor'}`}
                             secondary="Based on BMI and risk factors"
                           />
                         </ListItem>
@@ -678,14 +725,20 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                             <Typography variant="h6">🌿 Lifestyle Changes</Typography>
                           </Box>
                           <List dense>
-                            {result.recommendations?.lifestyle_changes?.map((change, index) => (
-                              <ListItem key={index}>
-                                <ListItemIcon>
-                                  <SelfImprovement color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={change} />
+                            {getRecommendations().lifestyle_changes ? (
+                              getRecommendations().lifestyle_changes.map((change, index) => (
+                                <ListItem key={index}>
+                                  <ListItemIcon>
+                                    <SelfImprovement color="primary" />
+                                  </ListItemIcon>
+                                  <ListItemText primary={change} />
+                                </ListItem>
+                              ))
+                            ) : (
+                              <ListItem>
+                                <ListItemText primary="Regular physical activity and balanced nutrition" />
                               </ListItem>
-                            ))}
+                            )}
                           </List>
                         </CardContent>
                       </Card>
@@ -792,7 +845,7 @@ const PremiumDiabetesTest = ({ language = 'english' }) => {
                       <Typography variant="subtitle2">{t.professional}:</Typography>
                     </Box>
                     <Typography variant="body2" paragraph>
-                      {result.recommendations?.medical_followup || "Schedule appointment with healthcare provider for comprehensive evaluation"}
+                      {getRecommendations().medical_followup || "Schedule appointment with healthcare provider for comprehensive evaluation"}
                     </Typography>
                     
                     <Box display="flex" alignItems="center" mb={1}>
